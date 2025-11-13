@@ -1,0 +1,160 @@
+
+---
+title: Órdenes
+description: Microservicio para la gestión de órdenes en el sistema
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { Badge } from '@astrojs/starlight/components';
+
+### Microservicio de Órdenes
+
+<Aside type="caution" title="IMPORTANTE">
+Este servicio permite crear y consultar órdenes, validando previamente la existencia de usuarios y productos mediante llamadas a otros microservicios.  
+Incluye lógica de reintentos para manejar fallos temporales en los servicios externos.
+</Aside>
+
+El microservicio de **Órdenes** se encarga de registrar y consultar órdenes realizadas por los usuarios.  
+Utiliza FastAPI, SQLAlchemy y llamadas asíncronas con `httpx` para integrar los servicios de **Usuarios** y **Productos**.
+
+#### Autor: Daniel Alejandro Cardona Rico  
+#### Fecha: 2025-11-11  
+#### Versión: 1.0.0  
+#### Estado: Desplegado en Producción
+
+---
+
+## Crear Orden
+
+Registra una nueva orden validando previamente que el usuario y el producto existan.
+
+**endpoint** <Badge text="POST" size="large" variant="caution" />
+
+```
+/api/v1/orders/
+```
+
+**Request**
+
+```json
+{
+  "user_id": 1,
+  "product_id": 2,
+  "quantity": 3
+}
+```
+
+**Response** <Badge text="201" variant="success" />
+
+```json
+{
+  "id": 10,
+  "user_id": 1,
+  "product_id": 2,
+  "quantity": 3
+}
+```
+
+<Badge text="404" variant="danger" />
+
+```json
+{
+  "detail": "Usuario no encontrado"
+}
+```
+
+<Badge text="503" variant="danger" />
+
+```json
+{
+  "detail": "Servicio de productos no disponible"
+}
+```
+
+---
+
+## Listar Órdenes
+
+Obtiene todas las órdenes registradas en la base de datos.
+
+**endpoint** <Badge text="GET" size="large" variant="caution" />
+
+```
+/api/v1/orders/
+```
+
+**Response** <Badge text="200" variant="success" />
+
+```json
+[
+  {
+    "id": 10,
+    "user_id": 1,
+    "product_id": 2,
+    "quantity": 3
+  }
+]
+```
+
+---
+
+## Obtener Orden Específica
+
+Consulta una orden por su ID e intenta recuperar los datos del usuario y producto asociados.
+
+**endpoint** <Badge text="GET" size="large" variant="caution" />
+
+```
+/api/v1/orders/{order_id}
+```
+
+**Response** <Badge text="200" variant="success" />
+
+```json
+{
+  "order": {
+    "id": 10,
+    "user_id": 1,
+    "product_id": 2,
+    "quantity": 3
+  },
+  "user": {
+    "id": 1,
+    "name": "Nombre del usuario",
+    "email": "usuario@correo.com",
+    "role": "user"
+  },
+  "product": {
+    "id": 2,
+    "cod_general": "P002",
+    "name": "Producto B",
+    "description": "Descripción del producto",
+    "price": 150.0
+  }
+}
+```
+
+<Badge text="404" variant="danger" />
+
+```json
+{
+  "detail": "Orden no encontrada"
+}
+```
+
+<Badge text="503" variant="danger" />
+
+```json
+{
+  "order": {
+    "id": 10,
+    "user_id": 1,
+    "product_id": 2,
+    "quantity": 3
+  },
+  "user": "Datos de usuario no disponibles (servicio de usuarios caído)",
+  "product": "Datos de producto no disponibles (servicio de productos caído)"
+}
+```
+```
+

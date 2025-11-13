@@ -1,0 +1,154 @@
+
+
+---
+title: Usuarios
+description: Microservicio para la gestión de usuarios del sistema
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { Badge } from '@astrojs/starlight/components';
+
+### Microservicio de Usuarios
+
+<Aside type="caution" title="IMPORTANTE">
+Este servicio permite administrar los usuarios del sistema: creación, consulta, actualización y eliminación.  
+Es fundamental para mantener la integridad de los datos y el control de roles.
+</Aside>
+
+El microservicio de **Usuarios** expone endpoints para realizar operaciones CRUD sobre los usuarios registrados.  
+Se integra con el servicio de autenticación mediante tokens JWT y utiliza SQLAlchemy para la persistencia.
+
+#### Autor: Daniel Alejandro Cardona Rico  
+#### Fecha: 2025-11-11  
+#### Versión: 1.0.0  
+#### Estado: Desplegado en Producción
+
+---
+
+## Listar Usuarios
+
+Obtiene todos los usuarios registrados en la base de datos.
+
+**endpoint** <Badge text="GET" size="large" variant="caution" />
+
+```
+/api/v1/users
+```
+
+**Response** <Badge text="200" variant="success" />
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Nombre del usuario",
+    "email": "usuario@correo.com",
+    "role": "user"
+  }
+]
+```
+
+---
+
+## Crear Usuario
+
+Registra un nuevo usuario en el sistema.
+
+**endpoint** <Badge text="POST" size="large" variant="caution" />
+
+```
+/api/v1/users
+```
+
+**Request**
+
+```json
+{
+  "name": "Nombre del usuario",
+  "email": "usuario@correo.com",
+  "role": "user"
+}
+```
+
+**Response** <Badge text="201" variant="success" />
+
+```json
+{
+  "id": 2,
+  "name": "Nombre del usuario",
+  "email": "usuario@correo.com",
+  "role": "user"
+}
+```
+
+---
+
+## Actualizar Usuario
+
+Modifica los datos de un usuario existente.
+
+**endpoint** <Badge text="PUT" size="large" variant="caution" />
+
+```
+/api/v1/users/{user_id}
+```
+
+**Request**
+
+```json
+{
+  "name": "Nuevo nombre",
+  "email": "nuevo@correo.com",
+  "role": "admin"
+}
+```
+
+**Response** <Badge text="200" variant="success" />
+
+```json
+{
+  "id": 2,
+  "name": "Nuevo nombre",
+  "email": "nuevo@correo.com",
+  "role": "admin"
+}
+```
+
+<Badge text="404" variant="danger" />
+
+```json
+{
+  "detail": "Usuario no encontrado"
+}
+```
+
+---
+
+## Eliminar Usuario
+
+Elimina un usuario por su ID.
+
+**endpoint** <Badge text="DELETE" size="large" variant="caution" />
+
+```
+/api/v1/users/{user_id}
+```
+
+**Response** <Badge text="200" variant="success" />
+
+```json
+{
+  "message": "Usuario eliminado correctamente"
+}
+```
+
+<Badge text="404" variant="danger" />
+
+```json
+{
+  "detail": "Usuario no encontrado"
+}
+```
+```
+
+
