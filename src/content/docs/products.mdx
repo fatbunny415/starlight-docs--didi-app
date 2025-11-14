@@ -11,14 +11,14 @@ import { Badge } from '@astrojs/starlight/components';
 
 <Aside type="caution" title="IMPORTANTE">
 Este servicio permite gestionar el catálogo de productos disponibles en el sistema.  
-Es esencial para mantener actualizada la información que consumen los servicios de pedidos y visualización.
+Incluye operaciones para listar, crear, actualizar, consultar y eliminar productos, con manejo de errores y validaciones.
 </Aside>
 
-El microservicio de **Productos** permite realizar operaciones CRUD sobre los productos registrados en la base de datos.  
-Utiliza SQLAlchemy para la persistencia y se integra con otros servicios mediante FastAPI.
+El microservicio de **Productos** utiliza FastAPI y SQLAlchemy para la persistencia de datos.  
+Se encarga de mantener actualizada la información que consumen otros servicios como pedidos y visualización.
 
-#### Autor: Daniel Alejandro Cardona Rico  
-#### Fecha: 2025-11-11  
+#### Autores: Daniel Alejandro Cardona Rico y Simon Alzate Velasquez  
+#### Fecha: 2025-11-13  
 #### Versión: 1.0.0  
 #### Estado: Desplegado en Producción
 
@@ -26,16 +26,12 @@ Utiliza SQLAlchemy para la persistencia y se integra con otros servicios mediant
 
 ## Listar Productos
 
-Obtiene todos los productos registrados en la base de datos.
-
 **endpoint** <Badge text="GET" size="large" variant="caution" />
-
 ```
 /api/v1/products
 ```
 
 **Response** <Badge text="200" variant="success" />
-
 ```json
 [
   {
@@ -48,20 +44,23 @@ Obtiene todos los productos registrados en la base de datos.
 ]
 ```
 
+<Badge text="500" variant="danger" />
+```json
+{
+  "detail": "Error interno del servidor: [detalle técnico]"
+}
+```
+
 ---
 
 ## Crear Producto
 
-Registra un nuevo producto en el sistema.
-
 **endpoint** <Badge text="POST" size="large" variant="caution" />
-
 ```
 /api/v1/products
 ```
 
 **Request**
-
 ```json
 {
   "cod_general": "P002",
@@ -72,7 +71,6 @@ Registra un nuevo producto en el sistema.
 ```
 
 **Response** <Badge text="201" variant="success" />
-
 ```json
 {
   "id": 2,
@@ -83,20 +81,30 @@ Registra un nuevo producto en el sistema.
 }
 ```
 
+<Badge text="400" variant="danger" />
+```json
+{
+  "detail": "Error al crear producto: [detalle técnico]"
+}
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "detail": "Error interno del servidor: [detalle técnico]"
+}
+```
+
 ---
 
 ## Actualizar Producto
 
-Modifica los datos de un producto existente.
-
 **endpoint** <Badge text="PUT" size="large" variant="caution" />
-
 ```
 /api/v1/products/{product_id}
 ```
 
 **Request**
-
 ```json
 {
   "cod_general": "P002",
@@ -107,7 +115,6 @@ Modifica los datos de un producto existente.
 ```
 
 **Response** <Badge text="200" variant="success" />
-
 ```json
 {
   "id": 2,
@@ -118,11 +125,24 @@ Modifica los datos de un producto existente.
 }
 ```
 
-<Badge text="404" variant="danger" />
+<Badge text="400" variant="danger" />
+```json
+{
+  "detail": "Error al actualizar producto: [detalle técnico]"
+}
+```
 
+<Badge text="404" variant="danger" />
 ```json
 {
   "detail": "Producto no encontrado"
+}
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "detail": "Error interno del servidor: [detalle técnico]"
 }
 ```
 
@@ -130,16 +150,12 @@ Modifica los datos de un producto existente.
 
 ## Eliminar Producto
 
-Elimina un producto por su ID.
-
 **endpoint** <Badge text="DELETE" size="large" variant="caution" />
-
 ```
 /api/v1/products/{product_id}
 ```
 
 **Response** <Badge text="200" variant="success" />
-
 ```json
 {
   "message": "Producto eliminado correctamente"
@@ -147,10 +163,50 @@ Elimina un producto por su ID.
 ```
 
 <Badge text="404" variant="danger" />
-
 ```json
 {
   "detail": "Producto no encontrado"
+}
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "detail": "Error interno del servidor: [detalle técnico]"
+}
+```
+
+---
+
+## Consultar Producto por ID
+
+**endpoint** <Badge text="GET" size="large" variant="caution" />
+```
+/api/v1/products/{product_id}
+```
+
+**Response** <Badge text="200" variant="success" />
+```json
+{
+  "id": 2,
+  "cod_general": "P002",
+  "name": "Producto B",
+  "description": "Descripción del producto",
+  "price": 150.0
+}
+```
+
+<Badge text="404" variant="danger" />
+```json
+{
+  "detail": "Producto no encontrado"
+}
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "detail": "Error interno del servidor: [detalle técnico]"
 }
 ```
 ```

@@ -17,8 +17,8 @@ Incluye lógica de reintentos para manejar fallos temporales en los servicios ex
 El microservicio de **Órdenes** se encarga de registrar y consultar órdenes realizadas por los usuarios.  
 Utiliza FastAPI, SQLAlchemy y llamadas asíncronas con `httpx` para integrar los servicios de **Usuarios** y **Productos**.
 
-#### Autor: Daniel Alejandro Cardona Rico  
-#### Fecha: 2025-11-11  
+#### Autores: Daniel Alejandro Cardona Rico y Simon Alzate Velasquez  
+#### Fecha: 2025-11-13  
 #### Versión: 1.0.0  
 #### Estado: Desplegado en Producción
 
@@ -35,7 +35,6 @@ Registra una nueva orden validando previamente que el usuario y el producto exis
 ```
 
 **Request**
-
 ```json
 {
   "user_id": 1,
@@ -45,7 +44,6 @@ Registra una nueva orden validando previamente que el usuario y el producto exis
 ```
 
 **Response** <Badge text="201" variant="success" />
-
 ```json
 {
   "id": 10,
@@ -55,8 +53,14 @@ Registra una nueva orden validando previamente que el usuario y el producto exis
 }
 ```
 
-<Badge text="404" variant="danger" />
+<Badge text="400" variant="danger" />
+```json
+{
+  "detail": "Error en el servicio de usuarios"
+}
+```
 
+<Badge text="404" variant="danger" />
 ```json
 {
   "detail": "Usuario no encontrado"
@@ -64,10 +68,17 @@ Registra una nueva orden validando previamente que el usuario y el producto exis
 ```
 
 <Badge text="503" variant="danger" />
-
 ```json
 {
   "detail": "Servicio de productos no disponible"
+}
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "message": "Error interno al crear la orden",
+  "error": "Internal server error"
 }
 ```
 
@@ -84,7 +95,6 @@ Obtiene todas las órdenes registradas en la base de datos.
 ```
 
 **Response** <Badge text="200" variant="success" />
-
 ```json
 [
   {
@@ -94,6 +104,14 @@ Obtiene todas las órdenes registradas en la base de datos.
     "quantity": 3
   }
 ]
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "message": "Error interno al obtener órdenes",
+  "error": "Internal server error"
+}
 ```
 
 ---
@@ -109,7 +127,6 @@ Consulta una orden por su ID e intenta recuperar los datos del usuario y product
 ```
 
 **Response** <Badge text="200" variant="success" />
-
 ```json
 {
   "order": {
@@ -135,7 +152,6 @@ Consulta una orden por su ID e intenta recuperar los datos del usuario y product
 ```
 
 <Badge text="404" variant="danger" />
-
 ```json
 {
   "detail": "Orden no encontrada"
@@ -143,7 +159,6 @@ Consulta una orden por su ID e intenta recuperar los datos del usuario y product
 ```
 
 <Badge text="503" variant="danger" />
-
 ```json
 {
   "order": {
@@ -154,6 +169,14 @@ Consulta una orden por su ID e intenta recuperar los datos del usuario y product
   },
   "user": "Datos de usuario no disponibles (servicio de usuarios caído)",
   "product": "Datos de producto no disponibles (servicio de productos caído)"
+}
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "message": "Error interno al obtener la orden",
+  "error": "Internal server error"
 }
 ```
 ```

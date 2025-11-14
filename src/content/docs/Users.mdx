@@ -1,5 +1,4 @@
 
-
 ---
 title: Usuarios
 description: Microservicio para la gestión de usuarios del sistema
@@ -12,31 +11,70 @@ import { Badge } from '@astrojs/starlight/components';
 
 <Aside type="caution" title="IMPORTANTE">
 Este servicio permite administrar los usuarios del sistema: creación, consulta, actualización y eliminación.  
-Es fundamental para mantener la integridad de los datos y el control de roles.
+Incluye validaciones, manejo de errores y persistencia con SQLAlchemy.
 </Aside>
 
 El microservicio de **Usuarios** expone endpoints para realizar operaciones CRUD sobre los usuarios registrados.  
-Se integra con el servicio de autenticación mediante tokens JWT y utiliza SQLAlchemy para la persistencia.
+Se integra con otros servicios mediante FastAPI y utiliza una base de datos relacional.
 
-#### Autor: Daniel Alejandro Cardona Rico  
-#### Fecha: 2025-11-11  
+#### utores: Daniel Alejandro Cardona Rico y Simon Alzate Velasquez  
+#### Fecha: 2025-11-13  
 #### Versión: 1.0.0  
 #### Estado: Desplegado en Producción
 
 ---
 
+## Crear Usuario
+
+**endpoint** <Badge text="POST" size="large" variant="caution" />
+```
+/api/v1/users
+```
+
+**Request**
+```json
+{
+  "name": "Nombre del usuario",
+  "email": "usuario@correo.com",
+  "password": "********",
+  "role": "user"
+}
+```
+
+**Response** <Badge text="201" variant="success" />
+```json
+{
+  "id": 1,
+  "name": "Nombre del usuario",
+  "email": "usuario@correo.com",
+  "role": "user"
+}
+```
+
+<Badge text="400" variant="danger" />
+```json
+{
+  "detail": "Error al crear usuario: [detalle técnico]"
+}
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "detail": "Error interno del servidor: [detalle técnico]"
+}
+```
+
+---
+
 ## Listar Usuarios
 
-Obtiene todos los usuarios registrados en la base de datos.
-
 **endpoint** <Badge text="GET" size="large" variant="caution" />
-
 ```
 /api/v1/users
 ```
 
 **Response** <Badge text="200" variant="success" />
-
 ```json
 [
   {
@@ -48,36 +86,43 @@ Obtiene todos los usuarios registrados en la base de datos.
 ]
 ```
 
----
-
-## Crear Usuario
-
-Registra un nuevo usuario en el sistema.
-
-**endpoint** <Badge text="POST" size="large" variant="caution" />
-
-```
-/api/v1/users
-```
-
-**Request**
-
+<Badge text="500" variant="danger" />
 ```json
 {
+  "detail": "Error interno del servidor: [detalle técnico]"
+}
+```
+
+---
+
+## Consultar Usuario por ID
+
+**endpoint** <Badge text="GET" size="large" variant="caution" />
+```
+/api/v1/users/{user_id}
+```
+
+**Response** <Badge text="200" variant="success" />
+```json
+{
+  "id": 1,
   "name": "Nombre del usuario",
   "email": "usuario@correo.com",
   "role": "user"
 }
 ```
 
-**Response** <Badge text="201" variant="success" />
-
+<Badge text="404" variant="danger" />
 ```json
 {
-  "id": 2,
-  "name": "Nombre del usuario",
-  "email": "usuario@correo.com",
-  "role": "user"
+  "detail": "Usuario no encontrado"
+}
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "detail": "Error interno del servidor: [detalle técnico]"
 }
 ```
 
@@ -85,16 +130,12 @@ Registra un nuevo usuario en el sistema.
 
 ## Actualizar Usuario
 
-Modifica los datos de un usuario existente.
-
 **endpoint** <Badge text="PUT" size="large" variant="caution" />
-
 ```
 /api/v1/users/{user_id}
 ```
 
 **Request**
-
 ```json
 {
   "name": "Nuevo nombre",
@@ -104,21 +145,33 @@ Modifica los datos de un usuario existente.
 ```
 
 **Response** <Badge text="200" variant="success" />
-
 ```json
 {
-  "id": 2,
+  "id": 1,
   "name": "Nuevo nombre",
   "email": "nuevo@correo.com",
   "role": "admin"
 }
 ```
 
-<Badge text="404" variant="danger" />
+<Badge text="400" variant="danger" />
+```json
+{
+  "detail": "Error al actualizar usuario: [detalle técnico]"
+}
+```
 
+<Badge text="404" variant="danger" />
 ```json
 {
   "detail": "Usuario no encontrado"
+}
+```
+
+<Badge text="500" variant="danger" />
+```json
+{
+  "detail": "Error interno del servidor: [detalle técnico]"
 }
 ```
 
@@ -126,16 +179,12 @@ Modifica los datos de un usuario existente.
 
 ## Eliminar Usuario
 
-Elimina un usuario por su ID.
-
 **endpoint** <Badge text="DELETE" size="large" variant="caution" />
-
 ```
 /api/v1/users/{user_id}
 ```
 
 **Response** <Badge text="200" variant="success" />
-
 ```json
 {
   "message": "Usuario eliminado correctamente"
@@ -143,12 +192,17 @@ Elimina un usuario por su ID.
 ```
 
 <Badge text="404" variant="danger" />
-
 ```json
 {
   "detail": "Usuario no encontrado"
 }
 ```
-```
 
+<Badge text="500" variant="danger" />
+```json
+{
+  "detail": "Error interno del servidor: [detalle técnico]"
+}
+```
+```
 
